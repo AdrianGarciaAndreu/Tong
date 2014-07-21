@@ -8,6 +8,7 @@ public class Ejecucion {
 		
 		Principal p = new Principal();
 		p.window();
+		//p.seconds();
 	}
 
 }

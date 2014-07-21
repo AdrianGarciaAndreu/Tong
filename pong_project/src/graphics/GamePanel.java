@@ -69,15 +69,15 @@ public class GamePanel extends JPanel{
 	 */
 	public boolean cantMoveDown(JComponent comp){
 		boolean locked = false;
-	  if (comp != null) {	
-		if( (comp.getLocation().y + (comp.getHeight()) >= this.YLimit ) ){
-			locked = true;
+		if (comp != null) {	
+			if( (comp.getLocation().y + (comp.getHeight()) >= this.YLimit ) ){
+				locked = true;
+			}
 		}
-	  }
-	  else {System.out.println("Jugador Null");}
-	  
+		else {System.out.println("Jugador Null");}
+
 		return(locked);
-		
+
 	  
 	}
 	

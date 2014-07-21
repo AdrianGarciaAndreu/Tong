@@ -2,6 +2,7 @@ package graphics;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.EventQueue;
 import java.awt.Image;
 import java.awt.LayoutManager;
 import java.awt.event.KeyAdapter;
@@ -28,6 +29,15 @@ public class Principal {
 	private JLabel j1;
 	private JLabel j2;
 	
+	
+	private boolean w_pressed = false;
+	private boolean s_pressed = false;
+	
+	private boolean up_pressed = false;
+	private boolean down_pressed = false;
+	
+	private int vel = 6;
+
 
 	/**
 	 * Método de creación de la ventana principal sus paneles 
@@ -66,11 +76,11 @@ public class Principal {
 		this.frame.setVisible(true);
 		
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	
 		
-
-
 		this.PlayerControls();
-		this.Player2Controls();
+	
+	
 	}
 	
 
@@ -107,72 +117,142 @@ public class Principal {
 		
 		return (j1);
 		
-
-		
 	}
-	
 	
 	
 	/**
 	 * Método que implementa los Event Handler necesarios para
 	 * que le jugador obtenga controles 
 	 */
-
 	public void PlayerControls() {
-		
-		this.main_pane.addKeyListener(new KeyAdapter() {
-			
-			boolean w_pressed = false;
-			boolean s_pressed = false;
-			
-			boolean up_pressed = false;
-			boolean down_pressed = false;
-			
-			
-			//////////////////////////////////////////////////////////////
-			//////////////////////////////////////////////////////////////
-			
-			
-			
-			
-			/////////////////////////////////////////////////////////////
-			/////////////////////////////////////////////////////////////
-			public void keyPressed(KeyEvent arg0){
-				// mueve el j2 hacía arriba
-				if (arg0.getKeyCode() == arg0.VK_DOWN) {	
-					if (game_panel.cantMoveDown(j1)==false) {
-						down_pressed = true;
+
+		EventQueue.invokeLater(new Runnable() {
+
+			@Override
+			public void run() {
+
+
+
+
+				frame.addKeyListener(new KeyAdapter() {	
+
+
+					public void keyPressed(KeyEvent arg0){
+
+
+
+						if (arg0.getKeyCode() != 0) {System.out.println("Key Pressed");}
+
+						// mueve el j2 hacía abajo
+						if (arg0.getKeyCode() == arg0.VK_DOWN) {	
+							down_pressed=true;	
+						}
+
+						//mueve el j2 hacía arriba
+						if (arg0.getKeyCode() == arg0.VK_UP) {  
+							up_pressed=true;
+						}
+
+						//mueve el j1 hacía abajo
+						if (arg0.getKeyCode() == arg0.VK_S) {  
+							s_pressed=true;		
+						}
+
+						//mueve el j1 hacía arriba
+						if (arg0.getKeyCode() == arg0.VK_W) {  
+							w_pressed = true;			
+						}
+
+
+						// captura el movimiento 
+						// cuando hay varias teclas pulsadas
+
+						if (arg0.getKeyCode() != 0) {
+
+							if (s_pressed==true && w_pressed==false) {
+								if (game_panel.cantMoveDown(j1)==false) {
+
+									moveComponentDown(j1, vel);
+								}
+							}
+							if (down_pressed==true && up_pressed==false) {
+								if (game_panel.cantMoveDown(j2)==false) {
+									moveComponentDown(j2, vel);
+								}
+							}
+							if (up_pressed==true && down_pressed==false) {
+								if (game_panel.cantMoveUp(j2)==false) {
+									moveComponentUp(j2, vel);
+								}
+							}
+							if (w_pressed==true && s_pressed==false) {
+								if (game_panel.cantMoveUp(j1)==false) {
+									moveComponentUp(j1, vel);
+								}
+							}
+
+						}
+
+
+
 					}
-				}
-				
-				//mueve el j2 hacía abajo
-				else if (arg0.getKeyCode() == arg0.VK_UP) {  
-					if (game_panel.cantMoveUp(j1)==false) {
-					
-				  }
-					
-				}
-				
+
+
+					public void keyReleased(KeyEvent arg0) {
+
+						// mueve el j2 hacía abajo
+						if (arg0.getKeyCode() == arg0.VK_DOWN) {	
+							down_pressed = false;					
+						}
+
+						// mueve el j1 hacía abajo
+						if (arg0.getKeyCode() == arg0.VK_S) {	
+							s_pressed = false;					
+						}
+
+						//mueve el j2 hacía arriba
+						if (arg0.getKeyCode() == arg0.VK_UP) {  
+							up_pressed=false;
+						}
+
+						//mueve el j2 hacía arriba
+						if (arg0.getKeyCode() == arg0.VK_W) {  
+							w_pressed=false;
+						}
+
+
+					}
+
+
+
+				});
+
+
 			}
-			
 		});
+
+
+	}
+
+
+	
+	public void seconds () {
+		double crono = 0.00;
+		boolean f = true;
 		
+		while (true) {
+			
+			double s = System.currentTimeMillis();
+			while (true){
+				if (System.currentTimeMillis()>=s+1000) {
+					crono++;
+					System.out.println(crono+" segundos transcurridos");
+					break;
+				}
+			}
+		}
 	}
 	
-	public void Player2Controls(){
-		
-		this.frame.addKeyListener(new KeyAdapter() {
-			
-			public void keyPressed(KeyEvent arg0) {
-
-				
-			}
-		});
-	}
-
-
-	
-
 	
 	
 	
@@ -183,9 +263,8 @@ public class Principal {
  */
 	public void moveComponentDown(JComponent comp,int vel){
 		comp.setLocation
-			(comp.getLocation().x , (comp.getLocation().y)+vel );
+			(comp.getLocation().x , (comp.getLocation().y)+(vel*2) );
 		comp.repaint();
-
 	}
 	
 /**
@@ -194,7 +273,7 @@ public class Principal {
  */
 	public void moveComponentUp(JComponent comp, int vel){
 		comp.setLocation
-			(comp.getLocation().x , (comp.getLocation().y)-vel );
+			(comp.getLocation().x , (comp.getLocation().y)-(vel*2) );
 		comp.repaint();
 	}
 	
